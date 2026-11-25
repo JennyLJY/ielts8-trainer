@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雅思 8.0 每日训练营 · 本地私教版</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --sidebar: #16213e;
+      --sidebar-hover: #1f2f56;
+      --accent: #3b82f6;
+      --accent-soft: #eff6ff;
+      --green: #10b981;
+      --green-soft: #ecfdf5;
+      --orange: #f59e0b;
+      --orange-soft: #fffbeb;
+      --red: #ef4444;
+      --card: #ffffff;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 270px;
+      background: var(--sidebar);
+      color: #fff;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: 0.3px; }
+    .brand p { font-size: 12px; color: #94a3b8; margin-top: 6px; line-height: 1.5; }
+    .target-box {
+      background: rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+    .target-box strong { color: #60a5fa; display: block; margin-bottom: 4px; }
+    .nav { display: flex; flex-direction: column; gap: 8px; }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: #e2e8f0;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .nav-btn:hover { background: var(--sidebar-hover); }
+    .nav-btn.active { background: var(--accent); color: #fff; }
+    .badge-done {
+      font-size: 11px;
+      background: var(--green);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .main {
+      flex: 1;
+      padding: 28px 34px;
+      max-width: 1060px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .topbar h2 { font-size: 22px; font-weight: 800; }
+    .actions { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--ink);
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover { background: #f8fafc; }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-green { background: var(--green); border-color: var(--green); color: #fff; }
+    .btn-green:hover { background: #059669; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .pill {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .text-block {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      line-height: 1.8;
+      font-size: 15px;
+      white-space: pre-wrap;
+    }
+    .marked { font-size: 16px; line-height: 1.9; }
+    .tip-item {
+      background: var(--orange-soft);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .feedback-box {
+      background: var(--green-soft);
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .q-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .q-opt { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+    .timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .audio-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .hidden { display: none; }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55);
+      display: flex; align-items: center; justify-content: center; z-index: 50;
+    }
+    .modal-backdrop.hidden { display: none; }
+    .modal {
+      background: var(--card); border-radius: 18px; padding: 24px 26px;
+      width: 480px; max-width: 92vw; display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; }
+    .field select, .field input {
+      width: 100%; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; font-size: 14px; font-family: inherit;
+    }
+    .provider-pill { font-size: 12px; color: #93c5fd; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>雅思 8.0 每日训练营</h1>
+      <p id="today-label">加载日期中...</p>
+    </div>
+    <div class="target-box">
+      <strong>目标路径：六级 → 总分 8.0</strong>
+      听力 8.5 ｜ 阅读 8.5<br>
+      写作 7.0 ｜ 口语 7.0<br>
+      纯本地运行 · 无任何外部链接
+      <div class="provider-pill" id="provider-label">模型：加载中...</div>
+    </div>
+    <button class="btn" id="btn-open-settings" style="background:#1f2f56;color:#fff;border-color:#334155;">⚙ 模型 / API 设置</button>
+    <nav class="nav" id="nav-list">
+      <button class="nav-btn active" data-mod="shadowing"><span>1. 语音跟读与纠音</span><span class="badge-done hidden" id="done-shadowing">已完成</span></button>
+      <button class="nav-btn" data-mod="listening"><span>2. 听力精听与听写</span><span class="badge-done hidden" id="done-listening">已完成</span></button>
+      <button class="nav-btn" data-mod="reading"><span>3. 阅读限时与精讲</span><span class="badge-done hidden" id="done-reading">已完成</span></button>
+      <button class="nav-btn" data-mod="writing"><span>4. 写作训练与批改</span><span class="badge-done hidden" id="done-writing">已完成</span></button>
+      <button class="nav-btn" data-mod="speaking"><span>5. 口语句型与模考</span><span class="badge-done hidden" id="done-speaking">已完成</span></button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h2 id="module-title">1. 语音跟读与纠音</h2>
+      <div class="actions">
+        <span class="timer hidden" id="timer-display">12:00</span>
+        <button class="btn" id="btn-refresh">换一组新题</button>
+        <button class="btn btn-green" id="btn-complete">打卡完成本项</button>
+      </div>
+    </div>
+    <div id="workspace" class="card">
+      <p class="muted">正在由本地私教模型加载今日训练内容...</p>
+    </div>
+  </main>
+
+  <div class="modal-backdrop hidden" id="settings-modal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:18px;">模型与 API 接口设置</h3>
+        <button class="btn" id="btn-close-settings" style="padding:4px 10px;">✕</button>
+      </div>
+      <div class="field">
+        <label>选择模型厂商</label>
+        <select id="cfg-provider"></select>
+      </div>
+      <div class="field" id="cfg-url-wrap">
+        <label>API Base URL</label>
+        <input type="text" id="cfg-base-url" placeholder="接口地址" />
+      </div>
+      <div class="field">
+        <label>模型名称 (Model)</label>
+        <input type="text" id="cfg-model" placeholder="如 deepseek-chat / gpt-4o-mini / qwen-plus" />
+      </div>
+      <div class="field" id="cfg-key-wrap">
+        <label>API Key <span class="muted" id="cfg-key-hint"></span></label>
+        <input type="password" id="cfg-api-key" placeholder="输入你的 API Key（仅保存在本机 data/config.json）" />
+      </div>
+      <div id="cfg-msg" class="muted"></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
+        <button class="btn" id="btn-test-settings">测试连接</button>
+        <button class="btn btn-primary" id="btn-save-settings">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MODULE_TITLES = {
+      shadowing: '1. 语音跟读与纠音（Shadowing）',
+      listening: '2. 听力精听与听写（冲 8.5）',
+      reading: '3. 阅读限时与长难句（冲 8.5）',
+      writing: '4. 写作训练与四维批改（冲 7.0+）',
+      speaking: '5. 口语句型替换与模考（冲 7.0+）',
+    };
+
+    let currentMod = 'shadowing';
+    let currentData = null;
+    let timerHandle = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function stopTimer() {
+      if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
+      document.getElementById('timer-display').classList.add('hidden');
+    }
+
+    function startTimer(seconds) {
+      stopTimer();
+      const el = document.getElementById('timer-display');
+      el.classList.remove('hidden');
+      let rem = seconds;
+      const draw = () => {
+        const m = String(Math.floor(rem / 60)).padStart(2, '0');
+        const s = String(rem % 60).padStart(2, '0');
+        el.textContent = `${m}:${s}`;
+      };
+      draw();
+      timerHandle = setInterval(() => {
+        if (rem > 0) { rem--; draw(); } else { clearInterval(timerHandle); }
+      }, 1000);
+    }
+
+    async function refreshStatus() {
+      const res = await fetch('/api/status');
+      const st = await res.json();
+      document.getElementById('today-label').textContent = `今日计划：${st.date}`;
+      for (const mod of Object.keys(MODULE_TITLES)) {
+        const badge = document.getElementById(`done-${mod}`);
+        if (st.modules[mod]?.completed) badge.classList.remove('hidden');
+        else badge.classList.add('hidden');
+      }
+    }
+
+    async function loadModule(mod, refresh = false) {
+      currentMod = mod;
+      stopTimer();
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.mod === mod));
+      document.getElementById('module-title').textContent = MODULE_TITLES[mod];
+      const ws = document.getElementById('workspace');
+      ws.innerHTML = `<p class="muted">正在调用本地模型生成今日「${MODULE_TITLES[mod]}」内容（首次生成约需 10–25 秒）...</p>`;
+
+      try {
+        const res = await fetch('/api/module/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ module: mod, refresh }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || '生成失败');
+        currentData = json.data;
+        renderModule(mod, currentData);
+      } catch (err) {
+        ws.innerHTML = `<p style="color:var(--red);">加载失败：${esc(err.message)}</p>`;
+      }
+    }
+
+    async function playTts(text, rate, audioEl) {
+      audioEl.classList.remove('hidden');
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, rate }),
+      });
+      const json = await res.json();
+      if (!res.ok) { alert(json.detail || '语音合成失败'); return; }
+      audioEl.src = json.url;
+      audioEl.play();
+    }
+
+    function setupRecorder(btnStart, btnStop, playbackEl) {
+      btnStart.onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+            playbackEl.src = URL.createObjectURL(blob);
+            playbackEl.classList.remove('hidden');
+            stream.getTracks().forEach(t => t.stop());
+          };
+          mediaRecorder.start();
+          btnStart.disabled = true;
+          btnStop.disabled = false;
+        } catch (e) {
+          alert('无法访问麦克风：' + e.message);
+        }
+      };
+      btnStop.onclick = () => {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+      };
+    }
+
+    function renderModule(mod, d) {
+      const ws = document.getElementById('workspace');
+      if (mod === 'shadowing') {
+        const tips = (d.pronunciation_tips || []).map(t =>
+          `<div class="tip-item"><strong>${esc(t.word_or_phrase)}</strong>｜常见误区：${esc(t.issue)}<br>纠音方法：${esc(t.fix)}</div>`
+        ).join('');
+        ws.innerHTML = `
+          <span class="pill">${esc(d.target_focus)}</span>
+          <h3>${esc(d.title)}</h3>
+          <div class="audio-row">
+            <button class="btn btn-primary" id="tts-slow">播放慢速示范 (0.8x)</button>
+            <button class="btn" id="tts-norm">播放常速示范 (1.0x)</button>
+            <button class="btn" id="rec-start">开始录音跟读</button>
+            <button class="btn" id="rec-stop" disabled>停止录音</button>
+          </div>
+          <audio id="demo-audio" controls class="hidden" style="width:100%;"></audio>
+          <audio id="user-audio" controls class="hidden" style="width:100%;"></audio>
+          <div class="text-block marked">${esc(d.marked_text)}</div>
+          <p class="muted">中文参考：${esc(d.chinese_meaning)}</p>
+          <h4>今日纠音要点</h4>
+          ${tips}
+        `;
+        const demo = document.getElementById('demo-audio');
+        document.getElementById('tts-slow').onclick = () => playTts(d.plain_text, -2, demo);
+        document.getElementById('tts-norm').onclick = () => playTts(d.plain_text, 0, demo);
+        setupRecorder(document.getElementById('rec-start'), document.getElementById('rec-stop'), document.getElementById('user-audio'));
+      } else if (mod === 'listening') {
+        const qs = (d.questions || []).map((q, idx) => `
+          <div class="q-box">
+            <strong>Q${idx + 1}. ${esc(q.q)}</strong>
+            ${(q.options || []).map(opt => `<label class="q-opt"><input type="radio" name="lq${idx}" value="${esc(opt[0])}"> ${esc(opt)}</label>`).join('')}
+            <div class="muted hidden" id="lexp-${idx}">答案：${esc(q.answer)} ｜ ${esc(q.explanation)}</div>
+          </div>
+        `).join('');
+        const dicts = (d.dictation_sentences || []).map((_, idx) =>
+          `<div><label class="muted">精听听写第 ${idx + 1} 句：</label><input type="text" id="dict-${idx}" placeholder="盲听后逐词写下你听到的句子..." /></div>`
+        ).join('');
+        ws.innerHTML = `
+          <span class="pill">盲听训练 · 先做题与听写，再看原文</span>
+          <h3>${esc(d.title)}</h3>
+          <div class="audio-row">
+            <button class="btn btn-primary" id="l-play">播放听力音频 (1.0x)</button>
+            <button class="btn" id="l-slow">慢速精听 (0.8x)</button>
+            <button class="btn" id="l-toggle">显示/隐藏原文</button>
+          </div>
+          <audio id="l-audio" controls class="hidden" style="width:100%;"></audio>
+          <div class="text-block hidden" id="l-transcript">${esc(d.transcript)}</div>
+          ${qs}
+          <h4>逐句精听听写</h4>
+          ${dicts}
+          <button class="btn btn-primary" id="l-submit" style="width:fit-content;">交卷并让 AI 诊断漏听原因</button>
+          <div id="l-feedback"></div>
+        `;
+        const audioEl = document.getElementById('l-audio');
+        document.getElementById('l-play').onclick = () => playTts(d.transcript, 0, audioEl);
+        document.getElementById('l-slow').onclick = () => playTts(d.transcript, -2, audioEl);
+        document.getElementById('l-toggle').onclick = () => document.getElementById('l-transcript').classList.toggle('hidden');
+        document.getElementById('l-submit').onclick = async () => {
+          (d.questions || []).forEach((_, i) => document.getElementById(`lexp-${i}`).classList.remove('hidden'));
+          const dictation = (d.dictation_sentences || []).map((_, i) => document.getElementById(`dict-${i}`).value);
+          const fb = document.getElementById('l-feedback');
+          fb.innerHTML = '<p class="muted">AI 正在对比你的听写与原文...</p>';
+          const res = await fetch('/api/module/grade', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ module: 'listening', submission: { dictation } })
+          });
+          const g = await res.json();
+          if (!res.ok) { fb.innerHTML = `<p style="color:var(--red);">${esc(g.detail)}</p>`; return; }
+          const details = (g.feedback.details || []).map(x => `<p>• 原句：${esc(x.expected)}<br>你的：${esc(x.actual)}<br>原因：${esc(x.missed_reason)}</p>`).join('<hr style="margin:8px 0;border:none;border-top:1px solid #d1fae5;">');
+          fb.innerHTML = `<div class="feedback-box"><strong>${esc(g.feedback.score_comment)}</strong><div style="margin-top:8px;">${details}</div></div>`;
+        };
+      } else if (mod === 'reading') {
+        startTimer((d.time_limit_minutes || 12) * 60);
+        const qs = (d.questions || []).map((q, idx) => `
+          <div class="q-box">
+            <strong>Q${idx + 1} [${esc(q.type)}]. ${esc(q.q)}</strong>
+            ${(q.options || []).map(opt => {
+              const val = q.type === 'TFNG' ? opt : opt[0];
+              return `<label class="q-opt"><input type="radio" name="rq${idx}" value="${esc(val)}"> ${esc(opt)}</label>`;
+            }).join('')}
+            <div class="muted hidden" id="rexp-${idx}">正确答案：${esc(q.answer)} ｜ ${esc(q.explanation)}</div>
+          </div>
+        `).join('');
+        const hards = (d.hard_sentences || []).map(h =>
+          `<div class="tip-item"><strong>${esc(h.en)}</strong><br>译文：${esc(h.cn)}<br>结构：${esc(h.grammar_note)}</div>`
+        ).join('');
+        ws.innerHTML = `
+          <span class="pill">限时 ${d.time_limit_minutes || 12} 分钟 · 冲刺 8.5</span>
+          <h3>${esc(d.title)}</h3>
+          <div class="text-block">${esc(d.passage)}</div>
+          ${qs}
+          <button class="btn btn-primary" id="r-submit" style="width:fit-content;">交卷核对答案</button>
+          <div id="r-score"></div>
+          <div id="r-hard" class="hidden"><h4>长难句精讲</h4>${hards}</div>
+        `;
+        document.getElementById('r-submit').onclick = () => {
+          stopTimer();
+          let correct = 0;
+          (d.questions || []).forEach((q, idx) => {
+            const sel = document.querySelector(`input[name="rq${idx}"]:checked`);
+            if (sel && sel.value === q.answer) correct++;
+            document.getElementById(`rexp-${idx}`).classList.remove('hidden');
+          });
+          document.getElementById('r-score').innerHTML = `<div class="feedback-box"><strong>得分：${correct} / ${(d.questions || []).length}</strong></div>`;
+          document.getElementById('r-hard').classList.remove('hidden');
+        };
+      } else if (mod === 'writing') {
+        const outline = (d.band8_outline || []).map(x => `<li>${esc(x)}</li>`).join('');
+        const colls = (d.high_value_collocations || []).map(c => `<li><strong>${esc(c.en)}</strong>：${esc(c.cn)}</li>`).join('');
+        ws.innerHTML = `
+          <span class="pill">${esc(d.task_type)} · 目标 7.0+</span>
+          <h3>${esc(d.title)}</h3>
+          <div class="text-block">${esc(d.prompt_en)}</div>
+          <p class="muted">审题解读：${esc(d.prompt_cn)}</p>
+          <div class="tip-item"><strong>高分思路框架：</strong><ul style="padding-left:18px;margin-top:4px;">${outline}</ul><strong style="display:block;margin-top:8px;">高分搭配：</strong><ul style="padding-left:18px;margin-top:4px;">${colls}</ul></div>
+          <textarea id="w-essay" rows="11" placeholder="在这里输入你的英文作文（建议 250+ 词）..."></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="muted" id="w-count">当前词数：0</span>
+            <button class="btn btn-primary" id="w-submit">提交 AI 考官批改</button>
+          </div>
+          <div id="w-feedback"></div>
+        `;
+        const box = document.getElementById('w-essay');
+        box.oninput = () => {
+          const words = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+          document.getElementById('w-count').textContent = `当前词数：${words}`;
+        };
+        document.getElementById('w-submit').onclick = async () => {
+          if (!box.value.trim()) { alert('请先写点内容再提交'); return; }
+          const fb = document.getElementById('w-feedback');
+          fb.innerHTML = '<p class="muted">AI 考官正在按 TR/CC/LR/GRA 四维批改...</p>';
+          const res = await fetch('/api/module/grade', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ module: 'writing', submission: { essay: box.value } })
+          });
+          const g = await res.json();
+          if (!res.ok) { fb.innerHTML = `<p style="color:var(--red);">${esc(g.detail)}</p>`; return; }
+          const f = g.feedback;
+          const upg = (f.sentence_upgrades || []).map(u => `<p>• 原句：${esc(u.original)}<br>润色：<strong>${esc(u.improved)}</strong><br>原因：${esc(u.reason)}</p>`).join('<hr style="margin:8px 0;border:none;border-top:1px solid #d1fae5;">');
+          fb.innerHTML = `<div class="feedback-box"><strong>预估分数：${esc(f.estimated_band)}</strong>
+            <p>TR：${esc(f.criteria?.TR)}</p><p>CC：${esc(f.criteria?.CC)}</p><p>LR：${esc(f.criteria?.LR)}</p><p>GRA：${esc(f.criteria?.GRA)}</p>
+            <div style="margin-top:10px;"><strong>逐句升级：</strong>${upg}</div>
+            <div style="margin-top:10px;"><strong>7.5+ 示范段：</strong><br>${esc(f.model_paragraph)}</div></div>`;
+        };
+      } else if (mod === 'speaking') {
+        const pats = (d.patterns || []).map(p =>
+          `<div class="tip-item">❌ 中式表达：${esc(p.chinglish)}<br>✔ 7.5+ 替换：<strong>${esc(p.natural_75)}</strong><br><span class="muted">${esc(p.note)}</span></div>`
+        ).join('');
+        const cue = d.part2_cue_card || {};
+        ws.innerHTML = `
+          <span class="pill">去中式英语 · 流利度目标 7.0+</span>
+          <h3>${esc(d.title)}</h3>
+          <h4>今日高频句型升级</h4>
+          ${pats}
+          <div class="q-box">
+            <strong>Part 2 模考题卡：${esc(cue.topic)}</strong>
+            <div class="muted">${(cue.bullets || []).map(esc).join('<br>')}</div>
+            <div class="audio-row" style="margin-top:8px;">
+              <button class="btn" id="sp-prep">1 分钟准备倒计时</button>
+              <button class="btn btn-primary" id="sp-rec">开始 2 分钟录音答题</button>
+              <button class="btn" id="sp-stop" disabled>停止录音</button>
+              <button class="btn" id="sp-demo">听 7.5+ 示范开头</button>
+            </div>
+            <audio id="sp-demo-audio" controls class="hidden" style="width:100%;"></audio>
+            <audio id="sp-user-audio" controls class="hidden" style="width:100%;"></audio>
+          </div>
+          <textarea id="sp-answer" rows="6" placeholder="把你刚才说的内容（或准备讲的草稿）打在这里，让 AI 帮你抓语法错和升级地道表达..."></textarea>
+          <button class="btn btn-primary" id="sp-submit" style="width:fit-content;">提交口语纠错与升级</button>
+          <div id="sp-feedback"></div>
+        `;
+        document.getElementById('sp-prep').onclick = () => startTimer(60);
+        document.getElementById('sp-demo').onclick = () => playTts(d.sample_opening, 0, document.getElementById('sp-demo-audio'));
+        setupRecorder(document.getElementById('sp-rec'), document.getElementById('sp-stop'), document.getElementById('sp-user-audio'));
+        document.getElementById('sp-rec').addEventListener('click', () => startTimer(120));
+        document.getElementById('sp-submit').onclick = async () => {
+          const ans = document.getElementById('sp-answer').value.trim();
+          if (!ans) { alert('请先输入你的回答文本'); return; }
+          const fb = document.getElementById('sp-feedback');
+          fb.innerHTML = '<p class="muted">AI 考官正在检查时态、单复数与中式表达...</p>';
+          const res = await fetch('/api/module/grade', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ module: 'speaking', submission: { answer: ans } })
+          });
+          const g = await res.json();
+          if (!res.ok) { fb.innerHTML = `<p style="color:var(--red);">${esc(g.detail)}</p>`; return; }
+          const f = g.feedback;
+          const upg = (f.upgrades || []).map(u => `<p>• ${esc(u.original)} → <strong>${esc(u.natural)}</strong></p>`).join('');
+          fb.innerHTML = `<div class="feedback-box"><strong>预估口语：${esc(f.estimated_band)}</strong>
+            <p style="margin-top:6px;">${esc(f.fluency_and_grammar)}</p>
+            <div style="margin-top:8px;"><strong>地道表达升级：</strong>${upg}</div>
+            <div style="margin-top:8px;"><strong>7.5+ 润色版：</strong><br>${esc(f.polished_version)}</div></div>`;
+        };
+      }
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.onclick = () => loadModule(btn.dataset.mod, false);
+    });
+    document.getElementById('btn-refresh').onclick = () => loadModule(currentMod, true);
+    document.getElementById('btn-complete').onclick = async () => {
+      await fetch('/api/module/complete', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ module: currentMod, score: 'done' })
+      });
+      await refreshStatus();
+    };
+
+    let presetsMap = {};
+
+    async function loadSettings() {
+      const res = await fetch('/api/settings');
+      const s = await res.json();
+      presetsMap = s.presets || {};
+      const sel = document.getElementById('cfg-provider');
+      sel.innerHTML = Object.entries(presetsMap).map(([k, v]) => `<option value="${esc(k)}">${esc(v.label)}</option>`).join('');
+      sel.value = s.provider;
+      document.getElementById('cfg-base-url').value = s.base_url || '';
+      document.getElementById('cfg-model').value = s.model || '';
+      document.getElementById('cfg-api-key').value = '';
+      document.getElementById('cfg-key-hint').textContent = s.has_api_key ? `（已保存：${s.api_key_masked}，留空则保持原 Key）` : '（未配置）';
+      const label = presetsMap[s.provider]?.label || s.provider;
+      document.getElementById('provider-label').textContent = `当前：${label} · ${s.model}`;
+      toggleProviderFields(s.provider);
+    }
+
+    function toggleProviderFields(provider) {
+      const isCopilot = provider === 'copilot';
+      document.getElementById('cfg-url-wrap').classList.toggle('hidden', isCopilot);
+      document.getElementById('cfg-key-wrap').classList.toggle('hidden', isCopilot);
+    }
+
+    document.getElementById('cfg-provider').onchange = (e) => {
+      const p = e.target.value;
+      const preset = presetsMap[p] || {};
+      document.getElementById('cfg-base-url').value = preset.base_url || '';
+      document.getElementById('cfg-model').value = preset.model || '';
+      toggleProviderFields(p);
+    };
+
+    document.getElementById('btn-open-settings').onclick = async () => {
+      document.getElementById('cfg-msg').textContent = '';
+      await loadSettings();
+      document.getElementById('settings-modal').classList.remove('hidden');
+    };
+    document.getElementById('btn-close-settings').onclick = () => {
+      document.getElementById('settings-modal').classList.add('hidden');
+    };
+    document.getElementById('btn-save-settings').onclick = async () => {
+      const msg = document.getElementById('cfg-msg');
+      msg.textContent = '正在保存...';
+      const res = await fetch('/api/settings', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          provider: document.getElementById('cfg-provider').value,
+          base_url: document.getElementById('cfg-base-url').value,
+          model: document.getElementById('cfg-model').value,
+          api_key: document.getElementById('cfg-api-key').value,
+        })
+      });
+      const j = await res.json();
+      if (!res.ok) { msg.style.color = 'var(--red)'; msg.textContent = j.detail || '保存失败'; return; }
+      msg.style.color = 'var(--green)'; msg.textContent = '保存成功！可点击「测试连接」或关闭后使用「换一组新题」。';
+      await loadSettings();
+    };
+    document.getElementById('btn-test-settings').onclick = async () => {
+      const msg = document.getElementById('cfg-msg');
+      msg.style.color = 'var(--muted)'; msg.textContent = '正在测试模型连通性...';
+      const res = await fetch('/api/settings/test', { method: 'POST' });
+      const j = await res.json();
+      if (!res.ok) { msg.style.color = 'var(--red)'; msg.textContent = j.detail || '连接失败'; return; }
+      msg.style.color = 'var(--green)'; msg.textContent = `连接成功！模型回复: ${j.reply}`;
+    };
+
+    loadSettings();
+    refreshStatus();
+    loadModule('shadowing', false);
+  </script>
+</body>
+</html>
